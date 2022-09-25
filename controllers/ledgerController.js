@@ -1,38 +1,42 @@
-function registerOnLedger(req, res, next) {
-
-    const { datas } = req.body;
-
-    const objeto = {
-        index: "2",
-        timestamp: new Date(),
-        previousHash: "1kj3fhg12jkh3g12hjk3ghk12jjkgh12j3hk",
-        datas: datas
-    }
-
-    blockChainArray.push(objeto)
-
-    res.status(201).json({
-        "message": "created",
-        "block": objeto
-    });
-    next()
-};
+import { blockChainArray } from "../main.js"
 
 
 
+export const registerOnLedger = (req, res, next) => {
+
+    if (!req.body) {
+        res.status(400).json({
+            "message": "bad request"
+        });
+
+    } else {
+        try {
+            const { datas } = req.body;
+
+            const objeto = {
+                index: "2",
+                timestamp: new Date(),
+                previousHash: "1kj3fhg12jkh3g12hjk3ghk12jjkgh12j3hk",
+                datas: datas
+            }
+
+            blockChainArray.push(objeto)
+
+            res.status(201).json({
+                "message": "created",
+                "block": objeto
+            });
 
 
 
+        } catch (error) {
+            res.status(500).jsonledgerRouter
+        }
 
-function listAll(req, res, next) {
+    };
 }
 
-function remove(req, res, next) {
-
-}
-
-
-export { registerOnLedger, listAll, remove };
+// export { registerOnLedger };
 
 // app.post('/ledger', (req, res) => {
 

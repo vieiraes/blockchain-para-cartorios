@@ -1,6 +1,6 @@
-import router from './routes/router.cjs'
+// import router from './routes/router.cjs'
 import express from 'express'
-import { registerOnLedger } from './controllers/ledgerController.js'
+import LedgerRouter from './routes/ledger.router.js'
 
 import { blockObject } from "./block.js"
 import { startServer } from './server.js';
@@ -15,9 +15,9 @@ export var blockChainArray = []
 
 
 
-app.use('/ledger', registerOnLedger)
+app.use('/ledger', LedgerRouter)
+// app.use('/block', BlockRouter)
 
-//writeToChain(blockObject)
 
 
 
@@ -45,3 +45,5 @@ function createChain() {
     }
 
 }
+
+export { app }
