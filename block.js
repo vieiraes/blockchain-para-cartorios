@@ -1,29 +1,16 @@
 import { createHmac } from 'node:crypto'
-
-
-export var blockObject = {
-    index: "1",
-    timestamp: new Date(),
-    previousHash: "1kj3fhg12jkh3g12hjk3ghk12jjkgh12j3hk",
-    datas: ["dado para registrar na blockchain"],
-}
-
+import { objeto } from './models/models.js'
 
 export function generateHash(data) {
 
     const secret = JSON.stringify(data);
     const hash = createHmac('sha256', secret).update('I love cupcakes').digest('hex');
-    return hash   
+    return hash
 }
 
 
-var result = generateHash(blockObject)
-
-
-
-
-
-console.log("Hash gerado",result);
+var result = generateHash(objeto)
+console.log("Hash gerado", result);
 
 // ///encode it for base64
 // function encodetoBase64(data) {

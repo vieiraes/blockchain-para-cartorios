@@ -1,28 +1,30 @@
 "use strict";
 
-//import blockExecute from './block.js'
-//array da blockchain
-var blockChainArray = [{
-  atributo: "algo"
-}, "", true];
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.blockChainArray = void 0;
+
+var _server = require("./server.js");
+
+//INITIALIZE SERVER
+(0, _server.startServer)(); //blockchain array DB
+
+var blockChainArray = [];
+exports.blockChainArray = blockChainArray;
 
 function writeToChain(data) {
-  return blockChainArray.push(data);
+  blockChainArray.push(data);
+  return console.log(blockChainArray);
 }
-
-var logs = writeToChain(blockChainArray);
-console.log(logs);
-console.log("aqui blockChainArray", blockChainArray);
-console.log("aqui blockCreated", blockCreated);
-module.exports = blockChainArray;
 
 function verifyChain() {}
 
 function createChain() {
   object = {
-    index: block.index,
-    timestamp: block.timestamp,
-    data: block.data,
-    previousHash: block.previousHash
+    index: blockObject.index,
+    timestamp: blockObject.timestamp,
+    previousHash: blockObject.previousHash,
+    datas: blockObject.datas
   };
 }

@@ -1,49 +1,48 @@
-// import router from './routes/router.cjs'
-import express from 'express'
-import LedgerRouter from './routes/ledger.router.js'
-
-import { blockObject } from "./block.js"
 import { startServer } from './server.js';
+import { objeto } from './models/models.js'
+import { registerOnLedger } from './controllers/ledgerController.js'
+import { app } from './server.js'
+import { ledgerRouter } from './routes/ledger.js'
 
-const app = express()
+
 
 startServer()
 
-//blockchain array
+
 export var blockChainArray = []
 
 
+function generateGenesisBlock() {
 
-
-app.use('/ledger', LedgerRouter)
-// app.use('/block', BlockRouter)
-
-
-
-
-
-function writeToChain(data) {
-    blockChainArray.push(data)
-    return console.log(blockChainArray)
-}
-
-function verifyChain() {
-
+  const genesisBlock = Object.assign(objeto, { counter: 0 })
+  blockChainArray.push(genesisBlock)
 
 }
+generateGenesisBlock()
+
+//ROTAS
+app.get('/status', (req, res) => res.status(200).json({ 'message': 'status ok!' }))
+app.use('/ledger', ledgerRouter)
 
 
 
+// function generateBlock() {
 
-function createChain() {
 
-    object = {
-        index: blockObject.index,
-        timestamp: blockObject.timestamp,
-        previousHash: blockObject.previousHash,
-        datas: blockObject.datas,
-    }
+//     function writeToChain(data) {
+//         blockChainArray.push(data)
+//         return console.log(blockChainArray)
+//     }
 
-}
+// }
 
-export { app }
+// function createChain() {
+
+//     object = {
+//         index: blockObject.index,
+//         timestamp: blockObject.timestamp,
+//         previousHash: blockObject.previousHash,
+//         datas: blockObject.datas,
+//     }
+
+// }

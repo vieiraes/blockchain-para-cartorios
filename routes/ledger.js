@@ -1,41 +1,46 @@
-import { blockChainArray } from "../main.js"
+import express from "express";
+import { blockChainArray } from "../main.js";
 import { objeto } from "../models/models.js"
 
-export const registerOnLedger = (req, res, next) => {
+
+const router = express.Router();
+
+
+//all aroutes in this file will be prefixed with /ledger
+router.post('/', (req, res) => {
 
     const { datas, previousHash } = req.body;
-
 
     if (!datas) {
         res.status(400).json({
             "message": "no datas defined on body request"
         })
-        return next()
+
 
     } else if (datas.length === 0) {
         res.status(400).json({
             "message": "no data to register"
         })
-        return next()
+
 
     } else if (!previousHash) {
         res.status(400).json({
             "message": "no previous hash defined on body request"
         })
-        return next()
+
 
 
     } else {
         try {
 
-
-            //what is teh best way to do this?
-          
-            const lastBlock = customersDB[customersDB.length - 1]
+            const lastBlock = blockChainArray[blockChainArray.length - 1]
+            
 
             if (lastBlock.randomBytes === previousHash) {
+              
+                const newObject = objeto
 
-                const newBlock = Object.assign(objeto,
+                const newBlock = Object.assign(newObject,
                     {
                         counter: lastBlock.counter + 1,
                         datas: datas
@@ -53,8 +58,6 @@ export const registerOnLedger = (req, res, next) => {
                 })
             }
 
-
-     
             if (findHash) {
                 console.log("hash encontrado");
             } else {
@@ -80,38 +83,34 @@ export const registerOnLedger = (req, res, next) => {
         }
 
     };
-    next();
-}
 
-// export { registerOnLedger };
 
-// app.post('/ledger', (req, res) => {
 
-//     const { datas } = req.body;
+})
 
-//     const objeto = {
-//         index: "2",
-//         timestamp: new Date(),
-//         previousHash: "1kj3fhg12jkh3g12hjk3ghk12jjkgh12j3hk",
-//         datas: datas
-//     }
+router.get('/', (req, res) => {
 
-//     blockChainArray.push(objeto)
+    res.status(200).json({
+        "message": "ok",
+        "ledger": blockChainArray
+    });
+})
 
-//     res.status(201).json({
+
+
+
+
+// import { registerOnLedger } from '../controllers/ledgerController.js'
+
+
+
+// const registerOnLedger = (req, res) => {
+//     res.status(200).json({
 //         "message": "created",
 //         "block": objeto
 //     });
-// });
 
+// }
 
-
-
-// app.get('/ledger', (req, res) => {
-
-//     res.status(200).json({
-//         "message": "ok",
-//         "block": blockChainArray
-//     });
-//     res.send('GET request to the homepage')
-// })
+// export { registerOnLedger }
+export { router as ledgerRouter };

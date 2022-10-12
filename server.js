@@ -1,15 +1,16 @@
-import express, { urlencoded } from 'express'
+import express from 'express'
 import bodyParser from 'body-parser';
+// import { compare } from './middleware/compareHashes.js'
 
+export const app = express()
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(bodyParser.json());
 
-const app = express();
 
 export function startServer() {
   const port = 3000;
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+  app.listen(port, () => console.log(`App listening on port ${port}!`))
 
 }
-
-app.get('/status', (req, res) => res.send('status ok!'))
