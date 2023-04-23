@@ -18,14 +18,14 @@ router.get('/', (req: Request, res: Response) => {
     res.status(200).json(ledgerDB)
 })
 
-
+//TODO: continuar o compare
 router.post('/compare', (req: Request, res: Response) => {
     let comparison:boolean 
-    const { hash, data } = req.body
+    const { hash, base64 } = req.body
 
     const object = {
         hash,
-        data
+        base64
     }
 
     res.status(200).json({
