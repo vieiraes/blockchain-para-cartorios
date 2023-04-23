@@ -1,6 +1,7 @@
 import express from 'express'
 import { genesisBlock } from './genesisBlock'
 import * as controllers from './controllers'
+import { connectDB } from './services/connection'
 
 
 const app = express()
@@ -13,9 +14,10 @@ async function bootstrap() {
   const server = app.listen(port, () => console.log(`App listening on port ${port}!`))
   if (server) {
     const genesis = await genesisBlock()
-    }else {
-      console.warn('Server error')
-    }
+    connectDB()
+  } else {
+    console.warn('Server error')
+  }
 }
 bootstrap()
 
