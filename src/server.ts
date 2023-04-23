@@ -10,11 +10,12 @@ app.use(express.json())
 
 async function bootstrap() {
   const port = 3434;
-  const server = await app.listen(port, () => console.log(`App listening on port ${port}!`))
+  const server = app.listen(port, () => console.log(`App listening on port ${port}!`))
   if (server) {
     const genesis = await genesisBlock()
+    }else {
+      console.warn('Server error')
     }
-
 }
 bootstrap()
 
@@ -23,4 +24,3 @@ bootstrap()
 @routes
 */
 app.use('/ledger', controllers.LedgerController)
-
