@@ -1,21 +1,46 @@
-version: '3.8'
+version: "3.2"
 
 services:
-  mongo:
-    image: mongo:latest
-    container_name: mongodb-blockchain
+  # mongo:
+  #   image: mongo:latest
+  #   container_name: mongodb-blockchain
+  #   hostname: mongodb-blockchain
+  #   restart: always
+  #   ports:
+  #     - 32773:27027
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=admin
+  #     - MONGO_INITDB_ROOT_PASSWORD=admin
+  #     - MONGO_INITDB_DATABASE=blockchain
+  #   volumes:
+  #     - ./data/db:/data/db
+  #   networks:
+  #     - default
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-blockchain
+    hostname: postgres-blockchain
     restart: always
-    ports:
-      - 27027:27027
     environment:
-      - MONGO_INITDB_DATABASE=blockchain
-      - MONGO_PORT=27027
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+      PGTZ: Sao_Paulo/Brazil
+      TZ: Sao_Paulo/Brazil
+    ports:
+      - 5432:5432
     volumes:
-      - ./data/db:/data/db
+      - postgres-volume:/var/lib/postgresql/data
     networks:
-      -  blockchain-network
-    command: --auth
+      - default
+
+volumes:
+  postgres-volume:
+    name: postgres-volume
+    driver: local
 
 networks:
-  blockchain-network:
+  default:
+    name: blockchain-network
     driver: bridge

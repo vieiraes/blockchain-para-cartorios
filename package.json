@@ -1,7 +1,7 @@
 {
   "name": "blockchain-javascript",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "./src/server.ts",
   "repository": "git@github.com:vieiraes/blockchain-javascript.git",
   "author": "Bruno Vieira <vieira.es@gmail.com>",
   "license": "MIT",
@@ -11,6 +11,7 @@
     "docker:down": "docker-compose down"
   },
   "dependencies": {
+    "@prisma/client": "^4.13.0",
     "@types/mongoose": "^5.11.97",
     "@types/swagger-ui-express": "^4.1.3",
     "@types/typescript": "^2.0.0",
@@ -32,6 +33,7 @@
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "^8.37.0",
     "nodemon": "^2.0.20",
+    "prisma": "^4.13.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
   }

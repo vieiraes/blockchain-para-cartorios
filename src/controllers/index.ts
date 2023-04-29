@@ -1,4 +1,4 @@
 import { router as LedgerController } from './Legder'
+import { router as UserController } from './Users'
 
-
-export { LedgerController }
+export { LedgerController, UserController }

@@ -1,10 +1,8 @@
-
 {
   "[python]": {
     "editor.formatOnType": true
   },
   "workbench.colorCustomizations": {
-
     "statusBar.foreground": "#e7e7e7",
     "statusBarItem.hoverBackground": "#f18c0f",
     "statusBarItem.remoteBackground": "#c3700b",
@@ -49,6 +47,6 @@
   "editor.scrollbar.verticalScrollbarSize": 34,
   "editor.smoothScrolling": true,
   "editor.stickyScroll.enabled": true,
-  "workbench.colorTheme": "pavao-discreto"
+  "workbench.colorTheme": "pavao-discreto",
   "editor.cursorSmoothCaretAnimation": "on"
 }
