@@ -1,48 +1,33 @@
-import { blockChainArray } from "../main.js"
+import { blockChainArray } from "../../../main.js"
 import { objeto } from "../models/models.js"
 
 export const registerOnLedger = (req, res, next) => {
-
     const { datas, previousHash } = req.body;
-
-
     if (!datas) {
         res.status(400).json({
             "message": "no datas defined on body request"
         })
         return next()
-
     } else if (datas.length === 0) {
         res.status(400).json({
             "message": "no data to register"
         })
         return next()
-
     } else if (!previousHash) {
         res.status(400).json({
             "message": "no previous hash defined on body request"
         })
         return next()
-
-
     } else {
         try {
-
-
-            //what is teh best way to do this?
-          
             const lastBlock = customersDB[customersDB.length - 1]
-
             if (lastBlock.randomBytes === previousHash) {
-
                 const newBlock = Object.assign(objeto,
                     {
                         counter: lastBlock.counter + 1,
                         datas: datas
                     })
-
                 blockChainArray.push(newBlock)
-
                 res.status(200).json({
                     "message": "ok",
                     "block": newBlock
@@ -52,33 +37,20 @@ export const registerOnLedger = (req, res, next) => {
                     "message": "previousHash does not match"
                 })
             }
-
-
-     
             if (findHash) {
                 console.log("hash encontrado");
             } else {
                 console.log("hash não encontrado");
             }
-
-            console.log(findHash);
-
-
-
-
             console.log(blockChainArray);
-
+            console.log(findHash);
             res.status(201).json({
                 "message": "created",
                 "block": objeto
             });
-
-
-
         } catch (error) {
             res.status(500).json({ "message": "internal server error" });
         }
-
     };
     next();
 }

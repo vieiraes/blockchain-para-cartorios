@@ -1,18 +1,7 @@
+
 {
   "[python]": {
     "editor.formatOnType": true
-  },
-  "workbench.colorCustomizations": {
-    "statusBar.foreground": "#e7e7e7",
-    "statusBarItem.hoverBackground": "#f18c0f",
-    "statusBarItem.remoteBackground": "#c3700b",
-    "statusBarItem.remoteForeground": "#e7e7e7",
-    "titleBar.activeBackground": "#c3700b",
-    "titleBar.activeForeground": "#e7e7e7",
-    "titleBar.inactiveBackground": "#c3700b99",
-    "titleBar.inactiveForeground": "#e7e7e799",
-    "editorCursor.foreground": "#00ff62",
-    "terminalCursor.foreground": "#00ff62"
   },
   "editor.cursorWidth": 6,
   "editor.inlineSuggest.enabled": true,
@@ -20,12 +9,6 @@
   "editor.linkedEditing": true,
   "gitlens.currentLine.scrollable": false,
   "gitlens.codeLens.enabled": false,
-  "github.copilot.enable": {
-    "*": true,
-    "yaml": false,
-    "plaintext": false,
-    "markdown": false
-  },
   "explorer.decorations.colors": true,
   "explorer.compactFolders": false,
   "editor.fontVariations": true,
