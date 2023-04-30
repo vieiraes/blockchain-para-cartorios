@@ -1,36 +1,32 @@
 import { v4 as uuid } from "uuid";
-import { toHash } from '../utils/hash'
+import { toHash } from '../utils/toHash'
 import { setBase64 } from '../utils/setBase64'
 import { PrismaClient } from '@prisma/client'
-
-interface IBlock {
-  id: string
-  blockNumber: number
-  createdAt?: string
-  hashId?: string
-  base64?: string
-  datas: string[]
-}
+import { IBlock } from './interfaces/IBlock'
+import { IIntermediateBlock } from './interfaces/IIntermediateBlock'
 
 const prisma = new PrismaClient()
 
 export async function genesisBlock() {
   try {
-    let earlierBlock = {
+    let intermediateBlock: IIntermediateBlock = {
       createdAt: new Date().toISOString(),
       datas: ["dados que quero jogar na ledger", "mais dados que quero jogar an ledger"],
     }
-    let objectHashed = ((await toHash(JSON.stringify(earlierBlock))).toString())
+    let objectHashed = ((await toHash(JSON.stringify(intermediateBlock))).toString())
     let base64 = setBase64(JSON.stringify(objectHashed)).toString()
+    const numberBlockReturn = await prisma.block.findFirst({ orderBy: { blockNumber: 'desc' } })
+    const bNumber: number = numberBlockReturn ? numberBlockReturn.blockNumber + 1 : 1
+
     let object: IBlock = {
       id: uuid(),
-      blockNumber: 0,
-      createdAt: earlierBlock.createdAt,
+      blockNumber: bNumber,
+      createdAt: intermediateBlock.createdAt,
       hashId: objectHashed,
       base64: base64,
-      datas: earlierBlock.datas,
+      datas: intermediateBlock.datas,
     }
-    // ledgerDB.push(object)
+    
     //@ts-ignore
     const resolver = await prisma.block.create({ data: object })
 
@@ -40,4 +36,3 @@ export async function genesisBlock() {
     return null
   }
 }
-

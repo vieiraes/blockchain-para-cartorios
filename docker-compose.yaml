@@ -1,22 +1,6 @@
 version: "3.2"
 
 services:
-  # mongo:
-  #   image: mongo:latest
-  #   container_name: mongodb-blockchain
-  #   hostname: mongodb-blockchain
-  #   restart: always
-  #   ports:
-  #     - 32773:27027
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=admin
-  #     - MONGO_INITDB_ROOT_PASSWORD=admin
-  #     - MONGO_INITDB_DATABASE=blockchain
-  #   volumes:
-  #     - ./data/db:/data/db
-  #   networks:
-  #     - default
-
   postgres:
     image: postgres:latest
     container_name: postgres-blockchain
