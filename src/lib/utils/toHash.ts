@@ -1,6 +1,6 @@
 import { promisify } from 'util';
 import { createCipheriv, createDecipheriv, randomBytes, createHash, scrypt } from 'crypto';
-import swaggerUI from 'swagger-ui-express';
+
 
 //HASHEAR
 export async function toHash(value: String | any) {

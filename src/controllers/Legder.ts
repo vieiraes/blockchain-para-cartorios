@@ -24,18 +24,23 @@ router.get('/', async (req: Request, res: Response) => {
     }
 })
 
-
 router.post('/', async (req: Request, res: Response) => {
     try {
         const { datas }: { datas: string[] } = req.body
-        //TODO: ACRECENTAR NO HEADER O PREVIOUS HASH
-        // const { previousHash }: { previousHash: string } = req.headers['x-previousHash']
-
+        const previousHashHeader: string = req.headers['x-previoushash'] as string
+        if (!previousHashHeader) {
+            console.log('Error: x-previousHash header is missing')
+            return res.status(412).send({ "message": "Error: x-previousHash header is missing" })
+        }
+        const lastBlock = await prisma.blocks.findFirst({ orderBy: { blockNumber: 'desc' } })
+        if (previousHashHeader != lastBlock?.hash) {
+            console.log('Error de Hash')
+            return res.status(412).send({ "message": "x-previousHash header is not valid" })
+        }
         let intermediateBlock: IIntermediateBlock = {
             createdAt: new Date().toISOString(),
             datas: datas,
         }
-
         const hash = (await toHash(JSON.stringify(intermediateBlock))).toString()
         // const base64 = (await setBase64(JSON.stringify(hash)).toString())
         const objectResult = await prisma.blocks.findFirst({ orderBy: { blockNumber: 'desc' } })
@@ -44,7 +49,6 @@ router.post('/', async (req: Request, res: Response) => {
             console.error(message)
             throw new Error(message)
         }
-
         const bNumber = (): number | any => {
             if (objectResult) {
                 const blockNumber = objectResult.blockNumber + 1
@@ -53,17 +57,6 @@ router.post('/', async (req: Request, res: Response) => {
                 handleSendServerError(res, 'Error getting blockNumber')
             }
         }
-
-        // var mypromise = new Promise((resolve, reject) => {
-        //     const hash: string = toHash(JSON.stringify(intermediateBlock)).toString()
-        //     resolve(hash)
-        // });
-        // mypromise.then((hash) => {
-        //    return hash
-        // }).catch((err) => {
-        //     console.log("inside error block " + err)
-        // })
-
         const object: IBlock = {
             id: uuid(),
             blockNumber: bNumber(),
@@ -72,7 +65,7 @@ router.post('/', async (req: Request, res: Response) => {
             datas: intermediateBlock.datas
         }
 
-        // @ts-ignore
+
         const resolver = await prisma.blocks.create({ data: object })
         res.status(201).send(resolver)
     } catch (error) {
@@ -80,5 +73,27 @@ router.post('/', async (req: Request, res: Response) => {
         res.status(400).send({ "Message": "Error" })
     }
 })
+
+//TODO: FAZER A ROTA DE VERFICICACAO DE AUTENTICIDADE
+// router.get('/verify', async (req: Request, res: Response) => {
+//     async function main() {
+//         const { hashToVerify }: string = req.body as string
+//         const { dataToVerify }: string = req.body as string
+//     }
+
+//     prisma.blocks.findFirst({ where: { hash: hashToVerify } })
+// })
+
+
+// try {
+//     main()
+// } catch (error) {
+//     console.log(error)
+//     res.status(400).send({ "Message": "Error" })
+
+// }
+
+
+
 
 export { router }

@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "migrate": "npx prisma migrate dev",
-    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "start": "rm -rf dist/ && tsc --project . && node dist/server.js",
+    "dev": "nodemon .",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"
   },
@@ -30,5 +31,5 @@
     "prisma": "^4.13.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
-  }
+  } 
 }
