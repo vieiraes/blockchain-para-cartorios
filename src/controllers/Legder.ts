@@ -42,18 +42,17 @@ router.post('/', async (req: Request, res: Response) => {
             datas: datas,
         }
         const hash = (await toHash(JSON.stringify(intermediateBlock))).toString()
-        // const base64 = (await setBase64(JSON.stringify(hash)).toString())
         const objectResult = await prisma.blocks.findFirst({ orderBy: { blockNumber: 'desc' } })
-        const handleSendServerError = (res: Response, message: string) => {
-            res.status(500).send({ message })
-            console.error(message)
-            throw new Error(message)
-        }
         const bNumber = (): number | any => {
             if (objectResult) {
                 const blockNumber = objectResult.blockNumber + 1
                 return blockNumber
             } else {
+                const handleSendServerError = (res: Response, message: string) => {
+                    res.status(500).send({ message })
+                    console.error(message)
+                    throw new Error(message)
+                }
                 handleSendServerError(res, 'Error getting blockNumber')
             }
         }
@@ -74,24 +73,44 @@ router.post('/', async (req: Request, res: Response) => {
     }
 })
 
-//TODO: FAZER A ROTA DE VERFICICACAO DE AUTENTICIDADE
-// router.get('/verify', async (req: Request, res: Response) => {
-//     async function main() {
-//         const { hashToVerify }: string = req.body as string
-//         const { dataToVerify }: string = req.body as string
-//     }
 
-//     prisma.blocks.findFirst({ where: { hash: hashToVerify } })
-// })
+router.post('/validate', async (req: Request, res: Response) => {
+    try {
+        const { auditHash }: { auditHash: string } = req.body
+        const { idNumber }: { idNumber: number } = req.body
+        //BUSCAR UM REGISTRO COM A REGRA DE VALIDACAO DE 3 CAMPOS
+        const returnObject = await prisma.blocks.findFirst({
+            where: { hash: auditHash, blockNumber: idNumber }
+        })
 
+        let handleError = (res: Response, statusCode: number, message: string) => {
+            res.status(statusCode).send({ message })
+            console.error(message)
+           
+        }
 
-// try {
-//     main()
-// } catch (error) {
-//     console.log(error)
-//     res.status(400).send({ "Message": "Error" })
+        if (!auditHash || !idNumber) {
+            return handleError(res, 400, 'Some data are missing')
+        }
 
-// }
+        if (!returnObject) {
+            return handleError(res, 404, `Cannot find this register: ${returnObject}`)
+        }
+
+        if (returnObject.hash === auditHash || returnObject.blockNumber === idNumber) {
+            return res.status(201).send({
+                "message": 'Register validated',
+                "data": [returnObject]
+            })
+
+        } else {
+            return handleError(res, 412, 'Error in verifiation')
+        }
+
+    } catch (error) {
+        res.status(400).send({ "Message": error })
+    }
+})
 
 
 

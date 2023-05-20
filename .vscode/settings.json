@@ -31,5 +31,5 @@
   "editor.smoothScrolling": true,
   "editor.stickyScroll.enabled": true,
   "workbench.colorTheme": "pavao-discreto",
-  "editor.cursorSmoothCaretAnimation": "on"
+  "editor.cursorSmoothCaretAnimation": "on" 
 }
