@@ -5,7 +5,7 @@ import { app } from '../server'
 interface IData {
     datas: string[]
 }
-
+//TODO: CRIAR TODA ESTRUTURA DE TESTES
 let mockData: IData[]
 
 beforeEach(() => {
