@@ -41,8 +41,9 @@ export async function genesisBlock() {
   }
 
   if (firstBlock?.hash === process.env.HASH_GENESIS) {
-    console.log('Genesis block matched! Blockchain initilized!')
-    return
+    return  async ()=>{
+      console.log('Genesis block matched! Blockchain initilized!')      
+    }
   }
 
   if (firstBlock?.hash != process.env.HASH_GENESIS) {

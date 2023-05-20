@@ -10,7 +10,8 @@
     "start": "rm -rf dist/ && tsc --project . && node dist/server.js",
     "dev": "nodemon .",
     "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "test": "jest --detectOpenHandles"
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
@@ -22,14 +23,20 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
+    "@jest/globals": "^29.5.0",
     "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.1",
+    "@types/supertest": "^2.0.12",
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "^8.37.0",
     "gitmoji-cli": "^8.2.2",
+    "jest": "^29.5.0",
     "nodemon": "^2.0.20",
     "prisma": "^4.13.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
   }

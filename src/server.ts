@@ -2,8 +2,8 @@ import express from 'express'
 import { genesisBlock } from './genesisBlock'
 import * as controllers from './controllers'
 
-const app = express()
-const router = express.Router()
+export const app = express()
+export const router = express.Router()
 app.use(router)
 app.use(express.json()) 
  

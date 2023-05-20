@@ -1,3 +1,4 @@
+require("dotenv").config()
 import express from 'express'
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
@@ -6,18 +7,38 @@ import { IIntermediateBlock } from "../interfaces/IIntermediateBlock";
 import { IBlock } from '../interfaces/IBlock';
 import { v4 as uuid } from "uuid";
 
+
 const router = express.Router()
 
 const prisma = new PrismaClient()
 
 router.get('/', async (req: Request, res: Response) => {
+    const auditKey: string | undefined  = req.header('x-audit-key')
+    function filterData(data: any): any {
+        const allowedAttributes = ['id', 'blockNumber', 'createdAt'];
+        const filteredData: any = {};
+        for (const attr of allowedAttributes) {
+            if (attr in data) {
+                filteredData[attr] = data[attr];
+            }
+        }
+        return filteredData;
+    }
     try {
         const data = await prisma.blocks.findMany({
             orderBy: {
                 blockNumber: 'desc'
             }
         })
-        res.status(200).json(data)
+        if (auditKey === process.env.AUDIT_KEY as string) {
+            return res.status(200).json({
+                "message": "AUDIT",
+                data
+            })
+        }
+        const filteredData = data.map(filterData);
+        res.status(200).json(filteredData)
+
     } catch (error) {
         res.status(400).send({ "Message": "Error" })
         console.log(error)
@@ -86,7 +107,7 @@ router.post('/validate', async (req: Request, res: Response) => {
         let handleError = (res: Response, statusCode: number, message: string) => {
             res.status(statusCode).send({ message })
             console.error(message)
-           
+
         }
 
         if (!auditHash || !idNumber) {
