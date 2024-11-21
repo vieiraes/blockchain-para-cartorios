@@ -2,7 +2,7 @@ require("dotenv").config()
 import express from 'express'
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
-import { toHash } from '../lib/utils/toHash'
+import { toHash } from '../utils/toHash'
 import { IIntermediateBlock } from "../interfaces/IIntermediateBlock";
 import { IBlock } from '../interfaces/IBlock';
 import { v4 as uuid } from "uuid";
@@ -13,7 +13,7 @@ const router = express.Router()
 const prisma = new PrismaClient()
 
 router.get('/', async (req: Request, res: Response) => {
-    const auditKey: string | undefined  = req.header('x-audit-key')
+    const auditKey: string = req.header['x-audit-key'] as string
     function filterData(data: any): any {
         const allowedAttributes = ['id', 'blockNumber', 'createdAt'];
         const filteredData: any = {};

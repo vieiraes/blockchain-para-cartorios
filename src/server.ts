@@ -1,27 +1,14 @@
-import express from 'express'
-import { genesisBlock } from './genesisBlock'
-import * as controllers from './controllers'
+import express from 'express';
+import blockchainRoutes from './routes/blockchain.routes';
 
-export const app = express()
-export const router = express.Router()
-app.use(router)
-app.use(express.json()) 
- 
-async function bootstrap() {
-  const port = 3434;
-  const server = app.listen(port, () => console.log(`App listening on port ${port}!`))
-  if (server) {
-    const genesis = await genesisBlock()
-  } else {
-    console.warn('Server error')
-  }
-}
-bootstrap()
+const app = express();
+const PORT = process.env.PORT || 3434;
 
+app.use(express.json());
+app.use('/blockchain', blockchainRoutes);
 
-/*
-@routes
-*/
-app.use('/ledger', controllers.LedgerController)
+app.listen(PORT, () => {
+    console.log(`Blockchain server running on port ${PORT}`);
+});
 
-
+export default app;
