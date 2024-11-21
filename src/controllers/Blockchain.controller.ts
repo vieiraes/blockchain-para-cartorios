@@ -7,7 +7,7 @@ import { rmSync } from 'fs';
 interface CertificateContent {
     data: any;
     type: string;
-    hash: string;
+    contentHash: string;
 }
 
 interface BlockData {

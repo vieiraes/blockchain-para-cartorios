@@ -1,12 +1,5 @@
 import { createHash } from 'crypto';
-
-interface Block {
-    index: number;
-    timestamp: string;
-    data: any;
-    previousHash: string;
-    hash: string;
-}
+import { Block, BlockData } from '../types/blockchain.types';
 
 export class Blockchain {
     private chain: Block[];
@@ -16,18 +9,32 @@ export class Blockchain {
     }
 
     private createGenesisBlock(): Block {
+        const genesisData: BlockData = {
+            id: "genesis",
+            timestamp: new Date().toISOString(),
+            issuer: "system",
+            content: [{
+                data: "Genesis Block",
+                type: "string",
+                hash: this.calculateHash("Genesis Block")
+            }]
+        };
+
         const block = {
             index: 0,
             timestamp: new Date().toISOString(),
-            data: "Genesis Block",
-            previousHash: "0",
-            hash: ""
+            data: genesisData,
+            previousBlockHash: "0",
+            blockHash: ""
         };
-        block.hash = this.calculateHash(block);
+        block.blockHash = this.calculateHash(block);
         return block;
     }
 
-    private calculateHash(block: Omit<Block, 'hash'>): string {
+    private calculateHash(block: Omit<Block, 'hash'> | string): string {
+        if (typeof block === 'string') {
+            return createHash('sha256').update(block).digest('hex');
+        }
         return createHash('sha256')
             .update(block.index + block.previousHash + block.timestamp + JSON.stringify(block.data))
             .digest('hex');
@@ -37,16 +44,16 @@ export class Blockchain {
         return this.chain[this.chain.length - 1];
     }
 
-    addBlock(data: any): Block {
+    addBlock(data: BlockData): Block {
         const previousBlock = this.getLatestBlock();
         const newBlock: Block = {
             index: previousBlock.index + 1,
             timestamp: new Date().toISOString(),
             data: data,
-            previousHash: previousBlock.hash,
-            hash: ""
+            previousBlockHash: previousBlock.blockHash,  // era 'previousHash' e 'hash'
+            blockHash: ""                              // era 'hash'
         };
-        newBlock.hash = this.calculateHash(newBlock);
+        newBlock.blockHash = this.calculateHash(newBlock);  // era 'hash'
         this.chain.push(newBlock);
         return newBlock;
     }
@@ -56,13 +63,18 @@ export class Blockchain {
             const currentBlock = this.chain[i];
             const previousBlock = this.chain[i - 1];
 
-            // Verifica se o hash atual é válido
-            if (currentBlock.hash !== this.calculateHash(currentBlock)) {
+            // Verifica hash atual
+            if (currentBlock.blockHash !== this.calculateHash(currentBlock)) {
                 return false;
             }
 
-            // Verifica se o previousHash aponta para o hash correto
-            if (currentBlock.previousHash !== previousBlock.hash) {
+            // Verifica ligação com bloco anterior
+            if (currentBlock.previousBlockHash !== previousBlock.blockHash) {
+                return false;
+            }
+
+            // Verifica timestamps
+            if (new Date(currentBlock.timestamp) < new Date(previousBlock.timestamp)) {
                 return false;
             }
         }
