@@ -8,7 +8,7 @@ interface Block {
     hash: string;
 }
 
-export class BlockChain {
+export class Blockchain {
     private chain: Block[];
 
     constructor() {

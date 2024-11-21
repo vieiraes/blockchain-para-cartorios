@@ -12,6 +12,13 @@ export interface BlockchainResponse {
     error?: string;
 }
 
-export type BlockData = {
-    data: any;
+interface BlockData {
+    id: string;          // ID único do certificado
+    timestamp: string;   // Quando foi certificado
+    issuer: string;      // Quem certificou
+    content: {           // Conteúdo certificado
+        data: any;       // Dados flexíveis
+        hash: string;    // Hash do dado original
+        type: string;    // Tipo do dado (string, number, etc)
+    }[]
 }
