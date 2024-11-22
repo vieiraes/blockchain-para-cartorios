@@ -84,4 +84,8 @@ export class Blockchain {
     getChain(): Block[] {
         return this.chain;
     }
+
+    public getBlockByIndex(index: number): Block | null {
+        return this.chain.find(block => block.index === index) || null;
+    }
 }

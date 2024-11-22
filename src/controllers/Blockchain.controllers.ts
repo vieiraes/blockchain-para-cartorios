@@ -50,7 +50,9 @@ class BlockchainController {
     public getBlocks = (req: Request, res: Response) => {
         try {
             const chain = this.blockchain.getChain();
-            res.status(200).json(chain);
+            // Invertendo a ordem para decrescente
+            const reversedChain = [...chain].reverse();
+            res.status(200).json(reversedChain);
         } catch (error) {
             console.error('Error getting blocks:', error);
             res.status(500).json({ error: 'Failed to get blockchain' });
@@ -109,6 +111,33 @@ class BlockchainController {
             res.status(500).json({ error: 'Failed to validate chain' });
         }
     }
+
+    public getBlockByIndex = (req: Request, res: Response) => {
+        try {
+            const index = parseInt(req.params.index);
+            
+            if (isNaN(index)) {
+                return res.status(400).json({ error: 'Invalid block index' });
+            }
+
+            const allBlocks = this.blockchain.getChain();
+            const block = allBlocks.find(b => b.index === index);
+            
+            if (!block) {
+                return res.status(404).json({ 
+                    error: 'Block not found',
+                    requestedIndex: index
+                });
+            }
+
+            res.status(200).json(block);
+        } catch (error) {
+            console.error('Error getting block:', error);
+            res.status(500).json({ error: 'Failed to get block' });
+        }
+    }
+
+
 }
 
 export default new BlockchainController();
