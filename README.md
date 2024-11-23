@@ -1,68 +1,105 @@
-# Blockchain JavaScript
+# Blockchain para Cartórios
 
-Uma implementação simplificada de blockchain em TypeScript/Node.js que roda em memória.
+Sistema de certificação digital baseado em blockchain desenvolvido especialmente para cartórios, permitindo o registro imutável e verificável de documentos e informações cartoriais.
 
-## Features
 
-- Blockchain em memória
-- Criação de blocos com hash SHA-256
-- Validação da integridade da cadeia
-- API RESTful para interação
+## Visão do Produto
+Este sistema oferece uma plataforma robusta para certificação digital cartorial, onde cartórios credenciados (Issuers) podem registrar e validar documentos e informações em uma blockchain. Cada registro é criptograficamente seguro e permanentemente armazenado, garantindo autenticidade e imutabilidade dos dados.
 
-## Tecnologias
+## Objetivos
+- Transparência: Proporcionar um sistema onde todos os registros possam ser auditados publicamente.
+- Segurança: Utilizar a criptografia para garantir que os dados estejam seguros e imutáveis.
+- Eficiência: Reduzir o tempo e o custo tradicionalmente envolvidos em processos cartoriais.
 
-- Node.js
+
+### Principais Funcionalidades
+
+#### 1. Gestão de Cartórios (Issuers)
+- Processo de credenciamento em duas etapas
+- Sistema de chaves criptográficas para autenticação
+- Validação de autoridade cartorial
+- Controle de acesso por credenciais
+
+#### 2. Registro de Documentos
+- Suporte a múltiplos tipos de dados (escrituras, registros, certidões)
+- Hash criptográfico para cada documento
+- Validação de integridade automática
+- Rastreabilidade completa de registros cartoriais
+
+#### 3. Consulta e Verificação
+- Visualização detalhada de registros
+- Consulta simplificada via ledger
+- Verificação de autenticidade
+- Histórico completo de certificações
+
+### Dashboards e Visualizações
+- Lista completa de blocos com paginação
+- Visão resumida do ledger
+- Contador de registros por bloco
+- Status dos cartórios credenciados
+
+## Guia Técnico
+
+### Requisitos
+- Node.js 16+
 - TypeScript
-- Express
-- SHA-256 para hashing
+- NPM ou Yarn
 
-## Instalação
+### Instalação
 
 ```bash
+# Clone o repositório
+git clone https://github.com/vieiraes/blockchain-cartorios.git
+
+# Instale as dependências
 npm install
 # ou
 yarn install
 ```
 
-## Executando
+### Configuração
+Crie um arquivo `.env` baseado no `.env.example`:
+```env
+PORT=3434
+```
 
-Desenvolvimento:
+### Executando
 ```bash
+# Desenvolvimento
 npm run dev
 # ou
 yarn dev
-```
 
-Produção:
-```bash
+# Produção
 npm run build && npm start
 # ou
 yarn build && yarn start
 ```
 
-## API Endpoints
+### Endpoints da API
 
-### GET /blockchain/blocks
-Lista todos os blocos da chain
+#### Blockchain
+- `GET /blockchain/blocks` - Lista todos os blocos
+- `GET /blockchain/blocks/:index` - Busca bloco por índice
+- `GET /blockchain/ledger` - Visão resumida do ledger
+- `POST /blockchain/blocks` - Cria novo bloco
 
-### POST /blockchain/blocks
-Adiciona um novo bloco
-```json
-{
-  "data": "Seus dados aqui"
-}
-```
+#### Issuers (Cartórios)
+- `POST /issuers` - Registra novo cartório
+- `POST /issuers/accreditation` - Processo de credenciamento
+- `GET /issuers` - Lista cartórios
+- `GET /issuers/:id` - Busca cartório específico
 
-### GET /blockchain/validate
-Verifica a integridade da blockchain
+## Roadmap
 
-## Estrutura do Projeto
+- [x] Sistema base de blockchain
+- [x] Gestão de cartórios
+- [x] API de consultas
+- [ ] Interface administrativa
+- [ ] Sistema de notificações
+- [ ] Exportação de relatórios
 
-```
-src/
-  ├── core/           # Core blockchain logic
-  ├── controllers/    # API controllers
-  ├── routes/         # Route definitions
-  ├── types/          # TypeScript interfaces
-  └── utils/          # Utilities
-```
+## Autor
+
+**Bruno Vieira**
+- Github: [@vieiraes](https://github.com/vieiraes)
