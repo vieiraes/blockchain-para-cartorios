@@ -13,7 +13,7 @@ export class Blockchain {
             id: "genesis",
             timestamp: new Date().toISOString(),
             issuer: "system",
-            content: [{
+            contents: [{
                 data: "Genesis Block",
                 type: "string",
                 hash: this.calculateHash("Genesis Block")

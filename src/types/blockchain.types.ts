@@ -8,7 +8,7 @@ export interface BlockData {
     id: string;
     timestamp: string;
     issuer: string;
-    content: CertificateContent[];
+    contents: CertificateContent[];
 }
 
 export interface Block {

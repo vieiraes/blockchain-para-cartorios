@@ -4,17 +4,17 @@ import { createHash } from 'crypto';
 import { v4 as uuid } from 'uuid';
 import { rmSync } from 'fs';
 
-interface CertificateContent {
+export interface CertificateContent {
     data: any;
     type: string;
     contentHash: string;
 }
 
-interface BlockData {
+export interface BlockData {
     id: string;
     timestamp: string;
     issuer: string;
-    content: CertificateContent[];
+    contents: CertificateContent[];
 }
 
 class BlockchainController {
@@ -24,12 +24,13 @@ class BlockchainController {
         this.blockchain = new Blockchain();
     }
 
-    private validateContent(content: any[]): { isValid: boolean; error?: string } {
-        if (!Array.isArray(content)) {
+    private validateContents(contents: any[]): { isValid: boolean; error?: string } {
+        if (!Array.isArray(contents)) {
             return { isValid: false, error: 'Content must be an array' };
         }
 
-        for (const item of content) {rmSync
+        for (const item of contents) {
+            rmSync
             if (!item.data) {
                 return { isValid: false, error: 'Each content item must have data' };
             }
@@ -47,12 +48,45 @@ class BlockchainController {
         return { isValid: true };
     }
 
+    private addContentCount(block: any) {
+        // Contando os itens dentro do array data do primeiro item de contents
+        const contentsData = block.data.contents[0].data;
+        const count = Array.isArray(contentsData) ? contentsData.length : 1;
+
+        return {
+            ...block,
+            contentCount: count
+        };
+    }
+
     public getBlocks = (req: Request, res: Response) => {
         try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+
             const chain = this.blockchain.getChain();
-            // Invertendo a ordem para decrescente
-            const reversedChain = [...chain].reverse();
-            res.status(200).json(reversedChain);
+
+            const reversedChain = [...chain].reverse()
+                .map(block => this.addContentCount(block));
+
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+
+            const paginatedBlocks = reversedChain.slice(startIndex, endIndex);
+            const totalBlocks = chain.length;
+            const totalPages = Math.ceil(totalBlocks / limit);
+
+            res.status(200).json({
+                blocks: paginatedBlocks,
+                pagination: {
+                    currentPage: page,
+                    totalPages,
+                    totalBlocks,
+                    limit,
+                    hasNext: page < totalPages,
+                    hasPrevious: page > 1
+                }
+            });
         } catch (error) {
             console.error('Error getting blocks:', error);
             res.status(500).json({ error: 'Failed to get blockchain' });
@@ -61,15 +95,15 @@ class BlockchainController {
 
     public addBlock = (req: Request, res: Response) => {
         try {
-            const { content, issuer } = req.body;
+            const { contents, issuer } = req.body;
 
             // Validações básicas
-            if (!content || !issuer) {
-                return res.status(400).json({ error: 'Content and issuer are required' });
+            if (!contents || !issuer) {
+                return res.status(400).json({ error: 'Contents and issuer are required' });
             }
 
             // Valida estrutura do conteúdo
-            const contentValidation = this.validateContent(content);
+            const contentValidation = this.validateContents(contents);
             if (!contentValidation.isValid) {
                 return res.status(400).json({ error: contentValidation.error });
             }
@@ -79,10 +113,10 @@ class BlockchainController {
                 id: uuid(),
                 timestamp: new Date().toISOString(),
                 issuer,
-                content: content.map(item => ({
+                contents: contents.map(item => ({
                     data: item.data,
                     type: typeof item.data,
-                    hash: createHash('sha256')
+                    contentHash: createHash('sha256')
                         .update(JSON.stringify(item.data))
                         .digest('hex')
                 }))
@@ -94,8 +128,14 @@ class BlockchainController {
             }
 
             const newBlock = this.blockchain.addBlock(blockData);
-            res.status(201).json(newBlock);
 
+            // Adiciona contentCount ao response
+            const response = {
+                ...newBlock,
+                contentCount: contents[0].data.length || 1
+            };
+
+            res.status(201).json(response);
         } catch (error) {
             console.error('Error adding block:', error);
             res.status(500).json({ error: 'Failed to add block' });
@@ -115,25 +155,66 @@ class BlockchainController {
     public getBlockByIndex = (req: Request, res: Response) => {
         try {
             const index = parseInt(req.params.index);
-            
+
             if (isNaN(index)) {
                 return res.status(400).json({ error: 'Invalid block index' });
             }
 
-            const allBlocks = this.blockchain.getChain();
-            const block = allBlocks.find(b => b.index === index);
-            
+            const block = this.blockchain.getBlockByIndex(index);
+
             if (!block) {
-                return res.status(404).json({ 
-                    error: 'Block not found',
-                    requestedIndex: index
-                });
+                return res.status(404).json({ error: 'Block not found' });
             }
 
-            res.status(200).json(block);
+            const blockWithCount = this.addContentCount(block);
+            res.status(200).json(blockWithCount);
+
         } catch (error) {
             console.error('Error getting block:', error);
             res.status(500).json({ error: 'Failed to get block' });
+        }
+    }
+
+    public getLedger = (req: Request, res: Response) => {
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+
+            const chain = this.blockchain.getChain();
+
+            // Mapeia apenas os dados necessários
+            const ledgerData = chain.map(block => ({
+                index: block.index,
+                contentCount: block.data.contents[0].data.length || 1,
+                blockHash: block.blockHash
+            }));
+
+            const reversedLedger = [...ledgerData].reverse();
+
+            // Paginação
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+            const paginatedLedger = reversedLedger.slice(startIndex, endIndex);
+
+            const totalBlocks = chain.length;
+            const totalPages = Math.ceil(totalBlocks / limit);
+
+            res.status(200).json({
+                ledger: {
+                    blocks: paginatedLedger
+                },
+                pagination: {
+                    currentPage: page,
+                    totalPages,
+                    totalBlocks,
+                    limit,
+                    hasNext: page < totalPages,
+                    hasPrevious: page > 1
+                }
+            });
+        } catch (error) {
+            console.error('Error getting ledger:', error);
+            res.status(500).json({ error: 'Failed to get ledger' });
         }
     }
 
