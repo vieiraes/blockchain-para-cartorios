@@ -1,6 +1,6 @@
 {
-  "name": "blockchain-javascript",
-  "version": "1.0.0",
+  "name": "blockchain-para-cartorios",
+  "version": "0.1.0",
   "main": "./src/server.ts",
   "author": "Bruno Vieira <vieira.es@gmail.com>",
   "license": "MIT",
