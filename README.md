@@ -1,100 +1,74 @@
 # Blockchain para Cartórios
 
-Sistema de certificação digital baseado em blockchain desenvolvido especialmente para cartórios, permitindo o registro imutável e verificável de documentos e informações cartoriais.
+## Visão Geral para o Product Owner
 
+### O que é este projeto?
 
-## Visão do Produto
-Este sistema oferece uma plataforma robusta para certificação digital cartorial, onde cartórios credenciados (Issuers) podem registrar e validar documentos e informações em uma blockchain. Cada registro é criptograficamente seguro e permanentemente armazenado, garantindo autenticidade e imutabilidade dos dados.
+Este é um sistema de certificação digital (um "cartório digital") que utiliza a tecnologia blockchain para garantir a autenticidade e a imutabilidade de registros. Ele funciona como um livro-razão digital, onde informações, uma vez inseridas, não podem ser alteradas ou removidas.
 
-## Objetivos
-- Transparência: Proporcionar um sistema onde todos os registros possam ser auditados publicamente.
-- Segurança: Utilizar a criptografia para garantir que os dados estejam seguros e imutáveis.
-- Eficiência: Reduzir o tempo e o custo tradicionalmente envolvidos em processos cartoriais.
+### Qual problema resolve?
 
+O projeto ataca a necessidade de confiança e segurança em processos cartoriais. Ele oferece:
 
-### Principais Funcionalidades
+- **Imutabilidade:** Uma vez que um documento é registrado na blockchain, ele não pode ser alterado, garantindo sua integridade para sempre.
+- **Transparência e Auditoria:** Cria uma trilha de auditoria perfeita e transparente. Qualquer pessoa com acesso pode verificar a validade de um registro, mas apenas entidades autorizadas podem criar novos registros.
+- **Segurança:** Reduz drasticamente o risco de fraudes, pois cada registro é selado com criptografia avançada.
 
-#### 1. Gestão de Cartórios (Issuers)
-- Processo de credenciamento em duas etapas
-- Sistema de chaves criptográficas para autenticação
-- Validação de autoridade cartorial
-- Controle de acesso por credenciais
+### Como funciona? (Em termos simples)
 
-#### 2. Registro de Documentos
-- Suporte a múltiplos tipos de dados (escrituras, registros, certidões)
-- Hash criptográfico para cada documento
-- Validação de integridade automática
-- Rastreabilidade completa de registros cartoriais
+O fluxo de trabalho do sistema se baseia em dois conceitos principais:
 
-#### 3. Consulta e Verificação
-- Visualização detalhada de registros
-- Consulta simplificada via ledger
-- Verificação de autenticidade
-- Histórico completo de certificações
+1.  **Credenciamento de Cartórios (Issuers):**
+    - Apenas cartórios autorizados podem registrar documentos. Para isso, eles passam por um processo de credenciamento seguro. Ao ser criado, o cartório recebe um conjunto de "palavras secretas".
+    - Usando essas palavras, ele gera uma chave (hash) que prova sua identidade e o credencia no sistema. Apenas após o credenciamento ele pode operar.
 
-### Dashboards e Visualizações
-- Lista completa de blocos com paginação
-- Visão resumida do ledger
-- Contador de registros por bloco
-- Status dos cartórios credenciados
+2.  **Registro de Documentos em Blocos:**
+    - Um cartório credenciado pode registrar um ou mais documentos (como escrituras, certidões, etc.) em um novo "bloco".
+    - Cada novo bloco é "acorrentado" ao bloco anterior usando criptografia. Isso forma a "blockchain", uma corrente de blocos segura e interligada.
 
-## Guia Técnico
+---
 
-### Requisitos
-- Node.js 16+
-- TypeScript
-- NPM ou Yarn
+## Capacidades Atuais da API
 
-### Instalação
+A API atual permite realizar as seguintes operações:
 
-```bash
-# Clone o repositório
-git clone https://github.com/vieiraes/blockchain-cartorios.git
+#### Gestão de Cartórios (Issuers)
+- **Criar** um novo cartório no sistema (que recebe suas palavras secretas).
+- **Gerar a chave** de credenciamento a partir das palavras secretas.
+- **Credenciar** um cartório usando sua chave para autorizá-lo a operar.
+- **Listar** todos os cartórios cadastrados.
+- **Consultar** os dados de um cartório específico.
 
-# Instale as dependências
-npm install
-# ou
-yarn install
-```
+#### Operações da Blockchain
+- **Registrar** um novo conjunto de documentos em um bloco.
+- **Consultar** todos os blocos da cadeia (com paginação).
+- **Consultar** um bloco específico pelo seu número de índice.
+- **Validar** a integridade de toda a cadeia de blocos.
+- **Obter um Ledger**, que é uma visão resumida e otimizada da blockchain.
 
-### Configuração
-Crie um arquivo `.env` baseado no `.env.example`:
-```env
-PORT=3434
-```
+---
 
-### Executando
-```bash
-# Desenvolvimento
-npm run dev
-# ou
-yarn dev
+## Arquitetura e Persistência de Dados
 
-# Produção
-npm run build && npm start
-# ou
-yarn build && yarn start
-```
+- **Tecnologia:** O backend é construído em Node.js usando TypeScript, o que garante um código robusto e moderno.
+- **Persistência:** Diferente de um protótipo simples, **todos os dados da aplicação são persistidos**. Utilizamos um banco de dados **Postgres**, gerenciado pela plataforma **Supabase**. A comunicação com o banco é feita de forma segura e eficiente através do **Prisma ORM**.
 
-### Endpoints da API
+---
 
-#### Blockchain
-- `GET /blockchain/blocks` - Lista todos os blocos
-- `GET /blockchain/blocks/:index` - Busca bloco por índice
-- `GET /blockchain/ledger` - Visão resumida do ledger
-- `POST /blockchain/blocks` - Cria novo bloco
+## Como Testar o Projeto
 
-#### Issuers (Cartórios)
-- `POST /issuers` - Registra novo cartório
-- `POST /issuers/accreditation` - Processo de credenciamento
-- `GET /issuers` - Lista cartórios
-- `GET /issuers/:id` - Busca cartório específico
+1.  **Inicie o servidor:** No seu terminal, execute o comando `npm run dev`.
+2.  **Use o Postman:** Importe o arquivo `blockchain-api.postman_collection.json` que está na raiz do projeto para o seu Postman.
+3.  **Execute as Requisições:** A coleção no Postman contém todas as chamadas de API mapeadas e prontas para serem usadas. Você pode seguir o fluxo (criar issuer, credenciar, adicionar bloco) para testar todas as funcionalidades.
+
+---
 
 ## Roadmap
 
 - [x] Sistema base de blockchain
 - [x] Gestão de cartórios
 - [x] API de consultas
+- [x] **Persistência de dados com Supabase/Prisma**
 - [ ] Interface administrativa
 - [ ] Sistema de notificações
 - [ ] Exportação de relatórios
