@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { IssuerManager } from '../core/Issuer.class';
 import { createHash } from 'crypto';
 
-
 class IssuerController {
     private issuerManager: IssuerManager;
 
@@ -10,7 +9,7 @@ class IssuerController {
         this.issuerManager = new IssuerManager();
     }
 
-    public createIssuer = (req: Request, res: Response) => {
+    public createIssuer = async (req: Request, res: Response) => {
         try {
             const { name } = req.body;
 
@@ -18,15 +17,19 @@ class IssuerController {
                 return res.status(400).json({ error: 'Name is required' });
             }
 
-            const issuer = this.issuerManager.createIssuer(name);
+            const issuer = await this.issuerManager.createIssuer(name);
             res.status(201).json(issuer);
         } catch (error) {
             console.error('Error creating issuer:', error);
-            res.status(500).json({ error: 'Failed to create issuer' });
+            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+            res.status(500).json({ 
+                error: 'Failed to create issuer',
+                details: errorMessage 
+            });
         }
     }
 
-    public accreditIssuer = (req: Request, res: Response) => {
+    public accreditIssuer = async (req: Request, res: Response) => {
         try {
             const { id, providedHash } = req.body;
 
@@ -34,7 +37,7 @@ class IssuerController {
                 return res.status(400).json({ error: 'ID and hash are required' });
             }
 
-            const isAccredited = this.issuerManager.accreditIssuer(id, providedHash);
+            const isAccredited = await this.issuerManager.accreditIssuer(id, providedHash);
 
             if (isAccredited) {
                 res.status(200).json({ message: 'Issuer successfully accredited' });
@@ -47,10 +50,10 @@ class IssuerController {
         }
     }
 
-    public getIssuer = (req: Request, res: Response) => {
+    public getIssuer = async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
-            const issuer = this.issuerManager.getIssuer(id);
+            const issuer = await this.issuerManager.getIssuer(id);
 
             if (!issuer) {
                 return res.status(404).json({ error: 'Issuer not found' });
@@ -63,9 +66,9 @@ class IssuerController {
         }
     }
 
-    public getAllIssuers = (req: Request, res: Response) => {
+    public getAllIssuers = async (req: Request, res: Response) => {
         try {
-            const issuers = this.issuerManager.getAllIssuers();
+            const issuers = await this.issuerManager.getAllIssuers();
             res.status(200).json(issuers);
         } catch (error) {
             console.error('Error getting issuers:', error);
@@ -97,8 +100,6 @@ class IssuerController {
         }
     }
 }
-
-
 
 export default new IssuerController();
 

@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres.kzwegxjxotiboylnzida:br290280@aws-1-sa-east-1.pooler.supabase.com:5432/postgres"
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model blocks {
+  index               Int      @id
+  timestamp           DateTime @db.Timestamptz(6)
+  data                Json?
+  previous_block_hash String
+  block_hash          String   @unique
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model issuers {
+  id               String   @id @db.Uuid
+  name             String
+  private_key_hash String   @unique
+  is_accredited    Boolean  @default(false)
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+}

@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "a8a1b8b0-5b48-4a7f-8b0a-5e8c1b1b1b1b",
+		"name": "Blockchain API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Issuers",
+			"item": [
+				{
+					"name": "Get All Issuers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/issuers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"issuers"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Issuer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Cartório Central de Testes\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/issuers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"issuers"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Issuer by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/issuers/uuid-do-emissor-aqui",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"issuers",
+							"uuid-do-emissor-aqui"
+						]
+						}
+					}
+				},
+				{
+					"name": "Generate Hash from Words",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"words\":[\"PALAVRA1\",\"PALAVRA2\",\"PALAVRA3\",\"PALAVRA4\",\"PALAVRA5\",\"PALAVRA6\",\"PALAVRA7\",\"PALAVRA8\",\"PALAVRA9\",\"PALAVRA10\",\"PALAVRA11\",\"PALAVRA12\",\"PALAVRA13\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/issuers/generate-hash",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"issuers",
+							"generate-hash"
+						]
+						}
+					}
+				},
+				{
+					"name": "Accredit Issuer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\":\"uuid-do-emissor-aqui\",\"providedHash\":\"hash-gerado-pelas-palavras-secretas\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/issuers/accreditation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"issuers",
+							"accreditation"
+						]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Blockchain",
+			"item": [
+				{
+					"name": "Get All Blocks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/blockchain/blocks?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blockchain",
+							"blocks"
+						],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Add New Block",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"issuer\":\"uuid-do-emissor-credenciado-aqui\",\"contents\":[{\"data\":{\"registroId\":\"123456\",\"tipo\":\"Certidão de Nascimento\",\"partes\":[\"Pai Teste\",\"Mãe Teste\"]}}]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/blockchain/blocks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blockchain",
+							"blocks"
+						]
+						}
+					}
+				},
+				{
+					"name": "Get Block by Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/blockchain/blocks/0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blockchain",
+							"blocks",
+							"0"
+						]
+						}
+					}
+				},
+				{
+					"name": "Validate Chain",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/blockchain/validate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blockchain",
+							"validate"
+						]
+						}
+					}
+				},
+				{
+					"name": "Get Ledger",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/blockchain/ledger",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blockchain",
+							"ledger"
+						]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3434",
+			"type": "string"
+		}
+	]
+}
