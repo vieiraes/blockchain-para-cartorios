@@ -1,4 +1,6 @@
 {
-    "editor.fontSize": 18,
-    "editor.fontFamily": "'Jet Brains Mono', 'Droid Sans Mono', 'monospace', monospace"
+    "editor.fontSize": 24,
+    "editor.fontFamily": "'Jet Brains Mono', 'Droid Sans Mono', 'monospace', monospace",
+    "terminal.integrated.fontSize": 20,
+    "terminal.integrated.lineHeight": 0.8
 }
