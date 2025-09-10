@@ -132,9 +132,14 @@ export class Blockchain {
     }
 
     private mapDbBlockToBlock(dbBlock: any): Block {
+        // Handle both Date objects and string timestamps
+        const timestamp = dbBlock.timestamp instanceof Date 
+            ? dbBlock.timestamp.toISOString() 
+            : dbBlock.timestamp;
+            
         return {
             index: dbBlock.index,
-            timestamp: dbBlock.timestamp.toISOString(),
+            timestamp: timestamp,
             data: dbBlock.data as BlockData,
             previousBlockHash: dbBlock.previous_block_hash, // Corrigido
             blockHash: dbBlock.block_hash // Corrigido
